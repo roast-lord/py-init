@@ -12,7 +12,7 @@ asdf local python $version
 
 echo "Python $version has been installed successfully."
 
-poetry init --name $dir_name --python $version --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency isort@latest --dev-dependency flake8@latest
+poetry init --name $dir_name --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency isort@latest --dev-dependency flake8@latest
 
 git init -b main
 touch .env
