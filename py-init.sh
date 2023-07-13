@@ -20,7 +20,8 @@ touch .gitignore
 touch .tool-versions
 touch README.md
 echo ".env" >>.gitignore
-
+echo "__pycache__">>.gitignore
+echo ".vscode">>.gitignore
 mkdir src
 mkdir tests
 mkdir src/$dir_name
