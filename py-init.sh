@@ -14,7 +14,7 @@ echo "Python $version has been installed successfully."
 
 poetry init --name $dir_name --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency isort@latest --dev-dependency flake8@latest --dev-dependency pytest@latest
 
-pip install -U pylint mypy flake8 black isort
+pip install -q -U pylint mypy flake8 black isort
 git init -b main
 touch .env
 touch .gitignore
