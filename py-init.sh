@@ -12,7 +12,7 @@ asdf local python $version
 
 echo "Python $version has been installed successfully."
 
-poetry init --name $dir_name --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency isort@latest --dev-dependency flake8@latest
+poetry init --name $dir_name --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency isort@latest --dev-dependency flake8@latest --dev-dependency pytest@latest
 
 pip install -U pylint mypy flake8 black isort
 git init -b main
@@ -27,6 +27,7 @@ mkdir src
 mkdir tests
 mkdir src/$dir_name
 mkdir src/$dir_name/lib
+touch src/$dir_name/lib/__init__.py
 touch src/$dir_name/__init__.py
 touch src/$dir_name/main.py
 touch tests/__init__.py
@@ -39,4 +40,4 @@ warn_return_any = True
 check_untyped_defs = True
 disallow_untyped_defs = False
 disallow_subclassing_any = True" >>mypy.ini
-pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,logging-fstring-interpolation,missing-function-docstring,missing-module-docstring,unused-argument,missing-class-docstring,line-too-long,broad-exception-caught,unspecified-encoding,global-at-module-level,global-statement,too-many-lines,unrecognized-option --generate-rcfile >>.pylintrc
+pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,logging-fstring-interpolation,missing-function-docstring,missing-module-docstring,missing-class-docstring,line-too-long,too-many-lines,unrecognized-option --generate-rcfile >>.pylintrc
