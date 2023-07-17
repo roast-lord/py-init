@@ -18,7 +18,6 @@ pip install -q -U pylint mypy flake8 black isort
 git init -b main
 touch .env
 touch .gitignore
-touch .tool-versions
 touch README.md
 echo ".env" >>.gitignore
 echo "__pycache__" >>.gitignore
