@@ -14,7 +14,7 @@ echo "Python $version has been installed successfully."
 
 mkdir .venv
 
-poetry init --name $dir_name --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency pytest@latest --dev-dependency ruff@latest
+poetry init --name app --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency pytest@latest --dev-dependency ruff@latest
 
 pip3 install -q -U ruff pylint mypy black
 git init -b main
