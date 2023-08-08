@@ -26,11 +26,11 @@ echo "__pycache__" >>.gitignore
 echo ".venv" >>.gitignore
 
 mkdir tests
-mkdir "$dir_name"
-mkdir "$dir_name/lib"
-touch "$dir_name/lib/__init__.py"
-touch "$dir_name/__init__.py"
-touch "$dir_name/main.py"
+mkdir "app"
+mkdir "app/lib"
+touch "app/lib/__init__.py"
+touch "app/__init__.py"
+touch "app/main.py"
 touch tests/__init__.py
 
 echo '
@@ -39,7 +39,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()' >>"$dir_name/main.py"
+    main()' >>"app/main.py"
 
 echo '
 [tool.mypy]
@@ -60,6 +60,7 @@ pretty = true' >>pyproject.toml
 
 echo '
 [tool.ruff]
+src = ["app", "tests"]
 select = [
     "E",
     "F",
@@ -83,6 +84,7 @@ select = [
     "EM",
     "G",
     "INP",
+    "FA",
     "PIE",
     "T20",
     "PYI",
@@ -115,17 +117,13 @@ ignore = [
     "T201",
 ]
 unfixable = ["B", "F401", "F841"]
+exclude = [".venv"]
 
-[tool.ruff.flake8-bugbear]
-extend-immutable-calls = [
-    "fastapi.Depends",
-    "fastapi.params.Depends",
-    "fastapi.Query",
-    "fastapi.params.Query",
-]
+[tool.ruff.isort]
+required-imports = ["from __future__ import annotations"]
 ' >>pyproject.toml
 
-pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,missing-function-docstring,missing-module-docstring,missing-class-docstring,line-too-long,too-many-lines,unrecognized-option --extension-pkg-whitelist=pydantic --generate-toml-config --ignored-modules=alembic.context,alembic.op >>pyproject.toml
+pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,logging-fstring-interpolation,missing-function-docstring,missing-module-docstring,unused-argument,missing-class-docstring,line-too-long,broad-exception-caught,unspecified-encoding,global-at-module-level,global-statement,too-many-lines,unrecognized-option,too-few-public-methods,too-many-arguments,fixme,too-many-statements,too-many-function-args --extension-pkg-whitelist=pydantic --generate-toml-config --ignored-modules=alembic.context,alembic.op >>pyproject.toml
 
 touch pyrightconfig.json
 
