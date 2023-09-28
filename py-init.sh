@@ -82,6 +82,7 @@ select = [
     "COM",
     "C4",
     "EM",
+    "LOG",
     "G",
     "INP",
     "FA",
@@ -101,41 +102,46 @@ select = [
 ignore = [
     "E501",
     "S101",
-    "UP007",
     "PLR0913",
     "S104",
     "PLR2004",
     "ANN101",
+    "ANN102",
     "A003",
+    "PLR6301",
     "FBT001",
     "FBT002",
-    "RUF012",
-    "UP038",
     "TCH003",
     "TCH002",
     "TCH001",
-    "T201",
+    "A002",
+    "UP037",
 ]
 unfixable = ["B", "F401", "F841"]
 exclude = [".venv"]
 
 [tool.ruff.isort]
 required-imports = ["from __future__ import annotations"]
-' >>pyproject.toml
-
-pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,logging-fstring-interpolation,missing-function-docstring,missing-module-docstring,unused-argument,missing-class-docstring,line-too-long,broad-exception-caught,unspecified-encoding,global-at-module-level,global-statement,too-many-lines,unrecognized-option,too-few-public-methods,too-many-arguments,fixme,too-many-statements,too-many-function-args --extension-pkg-whitelist=pydantic --generate-toml-config --ignored-modules=alembic.context,alembic.op >>pyproject.toml
-
-touch pyrightconfig.json
+'>>pyproject.toml
 
 echo '
-{
-    "reportGeneralTypeIssues": false,
-    "exclude": [
-        ".venv"
-    ],
-    "venvPath": ".",
-    "venv": ".venv"
-}' >>pyrightconfig.json
+[tool.pyright]
+ignore = [
+    "*.pyc",
+    "__pycache__",
+    ".git",
+    ".venv",
+    "app/db/migrations/versions",
+    "tests/data",
+]
+strict = ["app"]
+exclude = ["*.pyc", "__pycache__", ".git", ".venv"]
+include = ["app", "tests"]
+venvPath = "."
+venv = ".venv"
+'>>pyproject.toml
+
+pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,logging-fstring-interpolation,missing-function-docstring,missing-module-docstring,unused-argument,missing-class-docstring,line-too-long,unspecified-encoding,global-at-module-level,global-statement,too-many-lines,unrecognized-option,too-few-public-methods,too-many-arguments,fixme,too-many-statements,too-many-function-args --extension-pkg-whitelist=pydantic --generate-toml-config --ignored-modules=alembic.context,alembic.op >>pyproject.toml
 
 poetry install
 poetry lock
