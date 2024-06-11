@@ -4,19 +4,15 @@ dir_name=$(basename "$current_dir")
 
 read -p "Which python version?: " version
 
-asdf plugin update python
+touch .tool-versions
 
-asdf install python $version
-
-asdf local python $version
-
-echo "Python $version has been installed successfully."
+mise use "python@$version"
 
 mkdir .venv
 
-poetry init --name app --python "^$version" --dev-dependency pylint@latest --dev-dependency mypy@latest --dev-dependency black@latest --dev-dependency pytest@latest --dev-dependency ruff@latest
+poetry init --name app --python "^$version" --dev-dependency mypy@latest --dev-dependency pyright@latest --dev-dependency pytest@latest --dev-dependency ruff@latest
 
-pip3 install -q -U ruff pylint mypy black
+pip3 install -q -U ruff mypy pyright
 git init -b main
 touch .env
 touch .gitignore
@@ -43,24 +39,26 @@ if __name__ == "__main__":
 
 echo '
 [tool.mypy]
-disallow_untyped_calls = false
+disallow_untyped_calls = true
+disallow_subclassing_any = true
 follow_imports = "normal"
 warn_return_any = true
 check_untyped_defs = true
 disallow_untyped_defs = true
-disallow_incomplete_defs = true
-implicit_optional = false
+disallow_untyped_decorators = true
 warn_redundant_casts = true
 warn_unused_ignores = true
-disallow_any_generics = true
-no_implicit_reexport = true
+warn_unreachable = true
 warn_unused_configs = true
-strict = true
-pretty = true' >>pyproject.toml
+strict_equality = true
+strict_concatenate = true
+strict = true' >>pyproject.toml
 
 echo '
 [tool.ruff]
 src = ["app", "tests"]
+
+[tool.ruff.lint]
 select = [
     "E",
     "F",
@@ -73,14 +71,12 @@ select = [
     "ANN",
     "A",
     "FBT",
-    "ICN",
     "TCH",
     "RUF",
     "I",
     "N",
     "YTT",
     "COM",
-    "C4",
     "EM",
     "LOG",
     "G",
@@ -88,7 +84,6 @@ select = [
     "FA",
     "PIE",
     "T20",
-    "PYI",
     "Q",
     "RSE",
     "RET",
@@ -98,6 +93,14 @@ select = [
     "PTH",
     "TRY",
     "FLY",
+    "C4",
+    "T10",
+    "ISC",
+    "ICN",
+    "PYI",
+    "PT",
+    "TID",
+    "ARG",
 ]
 ignore = [
     "E501",
@@ -118,7 +121,6 @@ ignore = [
     "UP037",
 ]
 unfixable = ["B", "F401", "F841"]
-exclude = [".venv"]
 
 [tool.ruff.isort]
 required-imports = ["from __future__ import annotations"]
@@ -128,21 +130,16 @@ echo '
 [tool.pyright]
 ignore = [
     "*.pyc",
-    "__pycache__",
+    "**/__pycache__",
     ".git",
     ".venv",
-    "app/db/migrations/versions",
-    "tests/data",
 ]
-strict = ["app"]
-exclude = ["*.pyc", "__pycache__", ".git", ".venv"]
+strict = ["app", "tests"]
+exclude = ["*.pyc", "**/__pycache__", ".git", ".venv"]
 include = ["app", "tests"]
-venvPath = "."
-venv = ".venv"
 '>>pyproject.toml
 
-pylint --jobs=0 --attr-naming-style=snake_case --class-naming-style=PascalCase --const-naming-style=UPPER_CASE --function-naming-style=snake_case --method-naming-style=snake_case --module-naming-style=snake_case --variable-naming-style=snake_case --disable=raw-checker-failed,bad-inline-option,locally-disabled,file-ignored,suppressed-message,useless-suppression,deprecated-pragma,use-symbolic-message-instead,logging-fstring-interpolation,missing-function-docstring,missing-module-docstring,unused-argument,missing-class-docstring,line-too-long,unspecified-encoding,global-at-module-level,global-statement,too-many-lines,unrecognized-option,too-few-public-methods,too-many-arguments,fixme,too-many-statements,too-many-function-args --extension-pkg-whitelist=pydantic --generate-toml-config --ignored-modules=alembic.context,alembic.op >>pyproject.toml
-
+poetry env use $version
 poetry install
 poetry lock
 poetry check
